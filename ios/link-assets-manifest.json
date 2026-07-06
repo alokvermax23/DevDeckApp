@@ -1,0 +1,69 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-Bold.ttf",
+      "sha1": "a2ca1bc6bb575ac125d9eaf338aa9a5af56bc377"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-BoldItalic.ttf",
+      "sha1": "a4f955e482aaf33078911a94bce7180f6ad8b36f"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-ExtraBold.ttf",
+      "sha1": "66e821756efad2dffffb2bb3c847dca313e89c38"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-ExtraBoldItalic.ttf",
+      "sha1": "bfa8b1c76de0482cd28fe3cb20668a455536a6e3"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-ExtraLight.ttf",
+      "sha1": "55f9d71f6e9ac9e9c5f774ad20918801d7144fd4"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-ExtraLightItalic.ttf",
+      "sha1": "761433ffebc7a22016a1e30b884e2bc3a7615eb3"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-Italic.ttf",
+      "sha1": "e79a716cd8123834545fc3e790f00a201e79bfa9"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-Light.ttf",
+      "sha1": "86c3df56200514a0244b2cc91037abd541c09493"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-LightItalic.ttf",
+      "sha1": "1c0d51602e6a9e3f9f13053df46d7dd0d9416e4c"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-Medium.ttf",
+      "sha1": "e71dac67729fb110d7fc7e4a457ad19fcd921d2b"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-MediumItalic.ttf",
+      "sha1": "a6a3b60eefb54f88eea8e51e6fd5252ab5fea62d"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-Regular.ttf",
+      "sha1": "898ddb2e35ec8bc699c86d0a5e26da10a32a2600"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-SemiBold.ttf",
+      "sha1": "c575ac3e7a32faee1a201ff4baf05596906ff3b2"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-SemiBoldItalic.ttf",
+      "sha1": "a6f3f1b9bf2369a5d42444c3b6228d6c24a8c4a9"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-Thin.ttf",
+      "sha1": "a16ca88d3f13cfcc641cbec2d0db7257faab4407"
+    },
+    {
+      "path": "src/assets/Fonts/JetBrainsMono-ThinItalic.ttf",
+      "sha1": "15fe7f887065706221969d4d6e110fdc0a6d93ef"
+    }
+  ]
+}

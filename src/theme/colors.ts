@@ -1,0 +1,17 @@
+export const colors = {
+  background: '#0a0a0a',
+  onBackground: '#e5e2e1',
+  surface: '#0a0a0a',
+  onSurface: '#e5e2e1',
+  surfaceVariant: '#353534',
+  onSurfaceVariant: '#c7c4d7',
+  outline: '#908fa0',
+  outlineVariant: '#464554',
+  primary: '#c0c1ff',
+  tertiary: '#ffb783',
+  error: '#ffb4ab',
+  surfaceContainerLow: '#1c1b1b',
+  surfaceContainerLowest: '#0e0e0e',
+  surfaceContainerHigh: '#2a2a2a',
+  devdeckIndigo: '#6366f1',
+};
