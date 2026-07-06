@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import AppText from '../../components/AppText';
 import TerminalBlock from '../../components/TerminalBlock';
 import AuthButton from '../../components/AuthButton';
+import UsernameConfirmationSheet from '../../components/UsernameConfirmationSheet';
+import AtmosphericBackground from '../../components/AtmosphericBackground';
 import { colors } from '../../theme/colors';
 
 export default function LoginScreen() {
+  const [isSheetVisible, setIsSheetVisible] = useState(false);
+
   const handleLogin = (provider: string) => {
     console.log(`Login with ${provider}`);
+    setIsSheetVisible(true);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backgroundGrid} />
+      <AtmosphericBackground />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <View style={styles.topSection}>
@@ -44,6 +50,15 @@ export default function LoginScreen() {
         </View>
 
       </ScrollView>
+
+      <UsernameConfirmationSheet 
+        visible={isSheetVisible} 
+        onClose={() => setIsSheetVisible(false)} 
+        onContinue={(username) => {
+          console.log('Username selected:', username);
+          setIsSheetVisible(false);
+        }}
+      />
     </SafeAreaView>
   );
 }
