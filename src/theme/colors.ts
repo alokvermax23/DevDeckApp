@@ -12,6 +12,10 @@ export const colors = {
   error: '#ffb4ab',
   surfaceContainerLow: '#1c1b1b',
   surfaceContainerLowest: '#0e0e0e',
+  surfaceContainer: '#201f1f',
   surfaceContainerHigh: '#2a2a2a',
+  surfaceContainerHighest: '#353534',
+  primaryContainer: '#8083ff',
+  onPrimaryContainer: '#0d0096',
   devdeckIndigo: '#6366f1',
 };

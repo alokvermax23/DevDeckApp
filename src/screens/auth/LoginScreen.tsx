@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AppText from '../../components/AppText';
 import TerminalBlock from '../../components/TerminalBlock';
 import AuthButton from '../../components/AuthButton';
@@ -9,6 +11,7 @@ import { colors } from '../../theme/colors';
 
 export default function LoginScreen() {
   const [isSheetVisible, setIsSheetVisible] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleLogin = (provider: string) => {
     console.log(`Login with ${provider}`);
@@ -55,8 +58,8 @@ export default function LoginScreen() {
         visible={isSheetVisible} 
         onClose={() => setIsSheetVisible(false)} 
         onContinue={(username) => {
-          console.log('Username selected:', username);
           setIsSheetVisible(false);
+          navigation.navigate('Onboarding', { username });
         }}
       />
     </SafeAreaView>

@@ -1,0 +1,237 @@
+import React, { useState } from 'react';
+import { View, StyleSheet, SafeAreaView, ScrollView, Platform } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import AppText from '../../components/AppText';
+import AtmosphericBackground from '../../components/AtmosphericBackground';
+import BottomNavBar from '../../components/BottomNavBar';
+import PlatformCard, { PlatformStatus } from '../../components/PlatformCard';
+import LinkPlatformModal from '../../components/LinkPlatformModal';
+import { colors } from '../../theme/colors';
+
+export default function OnboardingScreen({ route, navigation }: any) {
+  const username = route.params?.username || 'user';
+  
+  // States for platform connection simulation
+  const [leetcodeStatus, setLeetcodeStatus] = useState<PlatformStatus>('unconnected');
+  const [codeforcesStatus, setCodeforcesStatus] = useState<PlatformStatus>('unconnected');
+  const [hackerrankStatus, setHackerrankStatus] = useState<PlatformStatus>('unconnected');
+  const [gfgStatus, setGfgStatus] = useState<PlatformStatus>('unconnected');
+
+  type LinkingPlatform = { id: string; name: string; brandColor: string; placeholder: string } | null;
+  const [activePlatform, setActivePlatform] = useState<LinkingPlatform>(null);
+
+  const simulateConnection = (id: string) => {
+    setActivePlatform(null);
+    if (id === 'leetcode') {
+      setLeetcodeStatus('connecting');
+      setTimeout(() => setLeetcodeStatus('connected'), 1500);
+    } else if (id === 'codeforces') {
+      setCodeforcesStatus('connecting');
+      setTimeout(() => setCodeforcesStatus('connected'), 1500);
+    } else if (id === 'hackerrank') {
+      setHackerrankStatus('connecting');
+      setTimeout(() => setHackerrankStatus('connected'), 1500);
+    } else if (id === 'geeksforgeeks') {
+      setGfgStatus('connecting');
+      setTimeout(() => setGfgStatus('connected'), 1500);
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <AtmosphericBackground />
+      
+      <View style={styles.mainContent}>
+        <View style={styles.contentWrapper}>
+          
+          <View style={styles.headerSection}>
+            <View style={styles.titleRow}>
+              <AppText style={styles.title}>Connect your platforms</AppText>
+              <View style={styles.badge}>
+                <AppText style={styles.badgeText}>1/5 connected</AppText>
+              </View>
+            </View>
+            <AppText style={styles.subtitle}>
+              Link your accounts to start tracking your progress. You can add more anytime from Settings.
+            </AppText>
+          </View>
+
+          <ScrollView 
+            style={styles.platformsScroll} 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.platformsScrollContent}
+          >
+            <View style={styles.platformsSection}>
+              <PlatformCard
+              name="GitHub"
+              description={`Connected as @${username}`}
+              brandColor="#ffffff"
+              iconPath="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+              status="connected"
+            />
+            
+            <PlatformCard
+              name="LeetCode"
+              description="Algorithm & problem solving"
+              brandColor="#FFA116"
+              iconPath="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"
+              status={leetcodeStatus}
+              onConnect={() => setActivePlatform({ id: 'leetcode', name: 'LeetCode', brandColor: '#FFA116', placeholder: 'leetcode.com/username' })}
+            />
+
+            <PlatformCard
+              name="Codeforces"
+              description="Competitive programming arena"
+              brandColor="#3182ce"
+              iconPath="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.673 21 0 20.328 0 19.5V9c0-.828.673-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.827 0-1.5-.672-1.5-1.5v-15c0-.828.673-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"
+              status={codeforcesStatus}
+              onConnect={() => setActivePlatform({ id: 'codeforces', name: 'Codeforces', brandColor: '#3182ce', placeholder: 'codeforces.com/profile/username' })}
+            />
+
+            <PlatformCard
+              name="HackerRank"
+              description="Skills certification & contests"
+              brandColor="#2ec866"
+              iconPath="M0 0v24h24V0zm9.95 8.002h1.805c.061 0 .111.05.111.111v7.767c0 .061-.05.111-.11.111H9.95c-.061 0-.111-.05-.111-.11v-2.87H7.894v2.87c0 .06-.05.11-.11.11H5.976a.11.11 0 01-.11-.11V8.112c0-.06.05-.11.11-.11h1.806c.061 0 .11.05.11.11v2.869H9.84v-2.87c0-.06.05-.11.11-.11zm2.999 0h5.778c.061 0 .111.05.111.11v7.767a.11.11 0 01-.11.112h-5.78a.11.11 0 01-.11-.11V8.111c0-.06.05-.11.11-.11z"
+              status={hackerrankStatus}
+              onConnect={() => setActivePlatform({ id: 'hackerrank', name: 'HackerRank', brandColor: '#2ec866', placeholder: 'hackerrank.com/username' })}
+            />
+
+            <PlatformCard
+              name="GeeksforGeeks"
+              description="Tutorials & interview prep"
+              brandColor="#2f8d46"
+              iconPath="M21.45 14.315c-.143.28-.334.532-.565.745a3.691 3.691 0 0 1-1.104.695 4.51 4.51 0 0 1-3.116-.016 3.79 3.79 0 0 1-2.135-2.078 3.571 3.571 0 0 1-.13-.353h7.418a4.26 4.26 0 0 1-.368 1.008zm-11.99-.654a3.793 3.793 0 0 1-2.134 2.078 4.51 4.51 0 0 1-3.117.016 3.7 3.7 0 0 1-1.104-.695 2.652 2.652 0 0 1-.564-.745 4.221 4.221 0 0 1-.368-1.006H9.59c-.038.12-.08.238-.13.352zm14.501-1.758a3.849 3.849 0 0 0-.082-.475l-9.634-.008a3.932 3.932 0 0 1 1.143-2.348c.363-.35.79-.625 1.26-.809a3.97 3.97 0 0 1 4.484.957l1.521-1.49a5.7 5.7 0 0 0-1.922-1.357 6.283 6.283 0 0 0-2.544-.49 6.35 6.35 0 0 0-2.405.457 6.007 6.007 0 0 0-1.963 1.276 6.142 6.142 0 0 0-1.325 1.94 5.862 5.862 0 0 0-.466 1.864h-.063a5.857 5.857 0 0 0-.467-1.865 6.13 6.13 0 0 0-1.325-1.939A6 6 0 0 0 8.21 6.34a6.698 6.698 0 0 0-4.949.031A5.708 5.708 0 0 0 1.34 7.73l1.52 1.49a4.166 4.166 0 0 1 4.484-.958c.47.184.898.46 1.26.81.368.36.66.792.859 1.268.146.344.242.708.285 1.08l-9.635.008A4.714 4.714 0 0 0 0 12.457a6.493 6.493 0 0 0 .345 2.127 4.927 4.927 0 0 0 1.08 1.783c.528.56 1.17 1 1.88 1.293a6.454 6.454 0 0 0 2.504.457c.824.005 1.64-.15 2.404-.457a5.986 5.986 0 0 0 1.964-1.277 6.116 6.116 0 0 0 1.686-3.076h.273a6.13 6.13 0 0 0 1.686 3.077 5.99 5.99 0 0 0 1.964 1.276 6.345 6.345 0 0 0 2.405.457 6.45 6.45 0 0 0 2.502-.457 5.42 5.42 0 0 0 1.882-1.293 4.928 4.928 0 0 0 1.08-1.783A6.52 6.52 0 0 0 24 12.457a4.757 4.757 0 0 0-.039-.554z"
+              status={gfgStatus}
+              onConnect={() => setActivePlatform({ id: 'geeksforgeeks', name: 'GeeksforGeeks', brandColor: '#2f8d46', placeholder: 'auth.geeksforgeeks.org/user/username' })}
+            />
+            </View>
+          </ScrollView>
+
+          <View style={styles.terminalTip}>
+            <Svg width="18" height="18" viewBox="0 0 24 24" style={{ marginTop: 2 }}>
+              <Path fill={colors.onSurfaceVariant} d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+            </Svg>
+            <View style={styles.terminalTipContent}>
+              <AppText style={styles.cliCommand}>$ dev init --help</AppText>
+              <AppText style={styles.cliDesc}>
+                Connecting platforms allows us to sync your streak data and generate your global developer rank.
+              </AppText>
+            </View>
+          </View>
+          
+        </View>
+      </View>
+
+      <BottomNavBar 
+        onSkip={() => console.log('Skipped onboarding')}
+        onContinue={() => console.log('Continued onboarding')}
+      />
+
+      {activePlatform && (
+        <LinkPlatformModal
+          visible={!!activePlatform}
+          platformName={activePlatform.name}
+          brandColor={activePlatform.brandColor}
+          placeholder={activePlatform.placeholder}
+          onClose={() => setActivePlatform(null)}
+          onConnect={(url) => {
+            simulateConnection(activePlatform.id);
+            console.log(`Linking ${activePlatform.name} with URL: ${url}`);
+          }}
+        />
+      )}
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  mainContent: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  contentWrapper: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 560,
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 24,
+  },
+  headerSection: {
+    marginBottom: 32,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    gap: 12,
+  },
+  title: {
+    flex: 1,
+    fontFamily: 'JetBrainsMono-Bold',
+    fontSize: 24,
+    color: colors.onSurface,
+  },
+  badge: {
+    backgroundColor: 'rgba(192, 193, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(192, 193, 255, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 16,
+  },
+  badgeText: {
+    fontFamily: 'JetBrainsMono-Medium',
+    fontSize: 11,
+    color: colors.primary,
+    letterSpacing: 1,
+  },
+  subtitle: {
+    fontFamily: 'JetBrainsMono-Regular',
+    fontSize: 14,
+    color: colors.onSurfaceVariant,
+    lineHeight: 24,
+    maxWidth: 480,
+  },
+  platformsScroll: {
+    flex: 1,
+    width: '100%',
+  },
+  platformsScrollContent: {
+    paddingBottom: 24,
+  },
+  platformsSection: {
+    marginBottom: 32,
+  },
+  terminalTip: {
+    flexDirection: 'row',
+    backgroundColor: colors.surfaceContainerLowest,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: colors.outlineVariant,
+    borderRadius: 8,
+    padding: 16,
+    gap: 12,
+  },
+  terminalTipContent: {
+    flex: 1,
+  },
+  cliCommand: {
+    fontFamily: 'JetBrainsMono-Medium',
+    fontSize: 13,
+    color: colors.primary,
+    marginBottom: 4,
+  },
+  cliDesc: {
+    fontFamily: 'JetBrainsMono-Regular',
+    fontSize: 13,
+    color: colors.onSurfaceVariant,
+    lineHeight: 20,
+  },
+});
