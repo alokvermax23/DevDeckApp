@@ -5,26 +5,48 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import AppText from './AppText';
 import AtmosphericBackground from './AtmosphericBackground';
 import { colors } from '../theme/colors';
+import { useCheckUsernameQuery } from '../store/api/baseApi';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
   onContinue: (username: string) => void;
+  initialUsername?: string;
+  isSubmitting?: boolean;
 };
 
-export default function UsernameConfirmationSheet({ visible, onClose, onContinue }: Props) {
-  const [username, setUsername] = useState('');
+export default function UsernameConfirmationSheet({ visible, onClose, onContinue, initialUsername = '', isSubmitting = false }: Props) {
+  const [username, setUsername] = useState(initialUsername);
+  const [debouncedUsername, setDebouncedUsername] = useState(initialUsername);
   const [toastVisible, setToastVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedUsername(username);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [username]);
+
+  const { data, isFetching, isError } = useCheckUsernameQuery(debouncedUsername, {
+    skip: debouncedUsername.length < 3,
+  });
+
+  const isAvailable = data?.available === true;
+  const showStatus = debouncedUsername.length >= 3 && !isFetching;
+
+  useEffect(() => {
     if (visible) {
-      setUsername('');
+      setUsername(initialUsername);
     }
-  }, [visible]);
+  }, [visible, initialUsername]);
+
+  const isButtonDisabled = !showStatus || !isAvailable || isFetching || isError || isSubmitting;
 
   const handleContinue = () => {
-    onContinue(username);
+    if (!isButtonDisabled) {
+      onContinue(username);
+    }
   };
 
   const handleCopyLink = () => {
@@ -79,9 +101,9 @@ export default function UsernameConfirmationSheet({ visible, onClose, onContinue
 
               {/* Input Section */}
               <View style={styles.inputSection}>
-                <View style={styles.inputContainer}>
+                <View style={[styles.inputContainer, showStatus && (!isAvailable || isError) && { borderColor: '#ef4444' }]}>
                   <View style={styles.inputLabelContainer}>
-                    <AppText style={styles.inputLabel}>USERNAME</AppText>
+                    <AppText style={[styles.inputLabel, showStatus && (!isAvailable || isError) && { color: '#ef4444' }]}>USERNAME</AppText>
                   </View>
                   <AppText style={styles.atSymbol}>@</AppText>
                   <TextInput
@@ -98,10 +120,26 @@ export default function UsernameConfirmationSheet({ visible, onClose, onContinue
 
                 {/* Availability Indicator */}
                 <View style={styles.availability}>
-                  <Svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 6 }}>
-                    <Path fill="#4ade80" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </Svg>
-                  <AppText style={styles.availabilityText}>Available</AppText>
+                  {isFetching ? (
+                    <AppText style={[styles.availabilityText, { color: colors.onSurfaceVariant }]}>Checking...</AppText>
+                  ) : isError ? (
+                    <AppText style={[styles.availabilityText, { color: '#ef4444' }]}>Error checking availability</AppText>
+                  ) : showStatus ? (
+                    <>
+                      <Svg width="16" height="16" viewBox="0 0 24 24" style={{ marginRight: 6 }}>
+                        {isAvailable ? (
+                           <Path fill="#4ade80" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        ) : (
+                           <Path fill="#ef4444" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        )}
+                      </Svg>
+                      <AppText style={[styles.availabilityText, !isAvailable && { color: '#ef4444' }]}>
+                        {isAvailable ? 'Available' : 'Username is taken'}
+                      </AppText>
+                    </>
+                  ) : (
+                    <AppText style={[styles.availabilityText, { color: colors.onSurfaceVariant }]}>Needs at least 3 characters</AppText>
+                  )}
                 </View>
               </View>
 
@@ -120,11 +158,20 @@ export default function UsernameConfirmationSheet({ visible, onClose, onContinue
 
               {/* Action Section */}
               <View style={styles.actionSection}>
-                <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={handleContinue}>
-                  <AppText style={styles.buttonText}>Continue</AppText>
-                  <Svg width="20" height="20" viewBox="0 0 24 24">
-                    <Path fill="#1000a9" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                  </Svg>
+                <TouchableOpacity 
+                  style={[styles.button, isButtonDisabled && styles.buttonDisabled]} 
+                  activeOpacity={0.8} 
+                  onPress={handleContinue}
+                  disabled={isButtonDisabled}
+                >
+                  <AppText style={[styles.buttonText, isButtonDisabled && styles.buttonTextDisabled]}>
+                    {isSubmitting ? 'Saving...' : 'Continue'}
+                  </AppText>
+                  {!isSubmitting && (
+                    <Svg width="20" height="20" viewBox="0 0 24 24">
+                      <Path fill={isButtonDisabled ? colors.onSurfaceVariant : "#1000a9"} d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </Svg>
+                  )}
                 </TouchableOpacity>
                 <AppText style={styles.footerText}>STEP 2 OF 3: IDENTITY SETUP</AppText>
               </View>
@@ -290,11 +337,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 24,
   },
+  buttonDisabled: {
+    backgroundColor: colors.surfaceContainerHighest,
+    borderColor: colors.outlineVariant,
+    borderWidth: 1,
+  },
   buttonText: {
     color: '#1000a9', // on-primary
     fontFamily: 'JetBrainsMono-Bold',
     fontSize: 18,
     marginRight: 8,
+  },
+  buttonTextDisabled: {
+    color: colors.onSurfaceVariant,
   },
   arrowIcon: {
     color: '#1000a9',

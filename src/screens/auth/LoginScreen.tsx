@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AppText from '../../components/AppText';
 import TerminalBlock from '../../components/TerminalBlock';
 import AuthButton from '../../components/AuthButton';
-import UsernameConfirmationSheet from '../../components/UsernameConfirmationSheet';
+
 import AtmosphericBackground from '../../components/AtmosphericBackground';
 import { colors } from '../../theme/colors';
 
 export default function LoginScreen() {
-  const [isSheetVisible, setIsSheetVisible] = useState(false);
+
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-  const handleLogin = (provider: string) => {
+
+  const handleLogin = async (provider: string) => {
     console.log(`Login with ${provider}`);
-    setIsSheetVisible(true);
+    const backendUrl = 'https://2fbi059n43.execute-api.ap-south-1.amazonaws.com';
+    const authUrl = `${backendUrl}/api/auth/${provider}`;
+    try {
+      await Linking.openURL(authUrl);
+    } catch (error) {
+      console.error(`Failed to open URL for ${provider}:`, error);
+    }
   };
 
   return (
@@ -54,14 +61,7 @@ export default function LoginScreen() {
 
       </ScrollView>
 
-      <UsernameConfirmationSheet 
-        visible={isSheetVisible} 
-        onClose={() => setIsSheetVisible(false)} 
-        onContinue={(username) => {
-          setIsSheetVisible(false);
-          navigation.navigate('Onboarding', { username });
-        }}
-      />
+
     </SafeAreaView>
   );
 }

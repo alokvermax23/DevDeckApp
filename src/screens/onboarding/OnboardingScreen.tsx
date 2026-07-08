@@ -6,10 +6,19 @@ import AtmosphericBackground from '../../components/AtmosphericBackground';
 import BottomNavBar from '../../components/BottomNavBar';
 import PlatformCard, { PlatformStatus } from '../../components/PlatformCard';
 import LinkPlatformModal from '../../components/LinkPlatformModal';
+import UsernameConfirmationSheet from '../../components/UsernameConfirmationSheet';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { useUpdateUsernameMutation } from '../../store/api/baseApi';
+import { setUsername as setReduxUsername } from '../../store/slices/authSlice';
 import { colors } from '../../theme/colors';
 
 export default function OnboardingScreen({ route, navigation }: any) {
-  const username = route.params?.username || 'user';
+  const dispatch = useAppDispatch();
+  const reduxUsername = useAppSelector(state => state.auth.username);
+  const [updateUsername, { isLoading: isUpdating }] = useUpdateUsernameMutation();
+  const [isSheetVisible, setIsSheetVisible] = useState(true);
+
+  const username = reduxUsername || 'octocat';
   
   // States for platform connection simulation
   const [leetcodeStatus, setLeetcodeStatus] = useState<PlatformStatus>('unconnected');
@@ -141,6 +150,23 @@ export default function OnboardingScreen({ route, navigation }: any) {
           }}
         />
       )}
+
+      <UsernameConfirmationSheet 
+        visible={isSheetVisible} 
+        onClose={() => setIsSheetVisible(false)} 
+        initialUsername={reduxUsername || ''}
+        isSubmitting={isUpdating}
+        onContinue={async (newUsername) => {
+          try {
+            await updateUsername({ username: newUsername }).unwrap();
+            dispatch(setReduxUsername(newUsername));
+            setIsSheetVisible(false);
+          } catch (e) {
+            console.error('Failed to update username', e);
+            // In a real app we'd show a toast here
+          }
+        }}
+      />
     </SafeAreaView>
   );
 }
