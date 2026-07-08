@@ -5,12 +5,14 @@ import AppText from './AppText';
 import PlatformLogo from './PlatformLogo';
 import { colors } from '../theme/colors';
 
+export type PlatformStatus = 'connected' | 'unconnected' | 'connecting';
+
 type Props = {
   name: string;
   description: string;
   brandColor: string;
   iconPath: string;
-  status?: 'connected' | 'unconnected' | 'connecting';
+  status?: PlatformStatus;
   onConnect?: () => void;
 };
 
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   },
   cardDisabled: {
     opacity: 0.6,
-    backgroundColor: 'rgba(28, 27, 27, 0.5)', // surface-container-low
+    backgroundColor: 'rgba(28, 27, 27, 0.5)', 
   },
   leftSection: {
     flexDirection: 'row',
