@@ -13,6 +13,7 @@ export const baseApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ['Platform'],
   endpoints: (builder) => ({
     checkHealth: builder.query<{ message: string }, void>({
       query: () => '/',

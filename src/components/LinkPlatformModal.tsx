@@ -20,6 +20,8 @@ type LinkPlatformModalProps = {
   platformName: string;
   brandColor: string;
   placeholder: string;
+  isLoading?: boolean;
+  error?: string | null;
   onClose: () => void;
   onConnect: (url: string) => void;
 };
@@ -29,15 +31,16 @@ export default function LinkPlatformModal({
   platformName, 
   brandColor, 
   placeholder,
+  isLoading,
+  error,
   onClose, 
   onConnect 
 }: LinkPlatformModalProps) {
   const [inputValue, setInputValue] = useState('');
 
   const handleConnect = () => {
-    if (inputValue.trim()) {
+    if (inputValue.trim() && !isLoading) {
       onConnect(inputValue);
-      setInputValue('');
     }
   };
 
@@ -63,13 +66,16 @@ export default function LinkPlatformModal({
                     <PlatformLogo name={platformName} size={48} />
                   </View>
                   <AppText style={styles.title}>Connect {platformName}</AppText>
-                  <AppText style={styles.subtitle}>Enter your profile URL or username below.</AppText>
+                  <AppText style={styles.subtitle}>Enter your platform username below.</AppText>
                 </View>
 
                 {/* Input Area */}
                 <View style={styles.inputSection}>
                   <TextInput
-                    style={[styles.input, { borderColor: brandColor + '80' }]}
+                    style={[
+                      styles.input, 
+                      { borderColor: error ? colors.error : brandColor + '80' }
+                    ]}
                     placeholder={placeholder}
                     placeholderTextColor={colors.outline}
                     value={inputValue}
@@ -78,14 +84,25 @@ export default function LinkPlatformModal({
                     autoCorrect={false}
                     autoFocus={true}
                     selectionColor={brandColor}
+                    editable={!isLoading}
                   />
                   
+                  {error && (
+                    <AppText style={styles.errorText}>{error}</AppText>
+                  )}
+                  
                   <TouchableOpacity 
-                    style={[styles.connectButton, { backgroundColor: brandColor }]}
+                    style={[
+                      styles.connectButton, 
+                      { backgroundColor: brandColor, opacity: isLoading ? 0.7 : 1 }
+                    ]}
                     activeOpacity={0.8}
                     onPress={handleConnect}
+                    disabled={isLoading}
                   >
-                    <AppText style={styles.connectButtonText}>Verify & Connect</AppText>
+                    <AppText style={styles.connectButtonText}>
+                      {isLoading ? 'Connecting...' : 'Verify & Connect'}
+                    </AppText>
                   </TouchableOpacity>
                 </View>
                 
@@ -150,6 +167,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     marginBottom: 16,
+  },
+  errorText: {
+    fontFamily: 'JetBrainsMono-Regular',
+    fontSize: 12,
+    color: colors.error,
+    marginBottom: 16,
+    marginTop: -8, // pull it up slightly closer to the input
   },
   connectButton: {
     borderRadius: 12,
