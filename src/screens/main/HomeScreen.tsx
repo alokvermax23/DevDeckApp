@@ -5,6 +5,7 @@ import Header from '../../components/home/Header';
 import StreakCard from '../../components/home/StreakCard';
 import HeatmapCard from '../../components/home/HeatmapCard';
 import StatsGrid from '../../components/home/StatsGrid';
+import DashboardSkeleton from '../../components/home/DashboardSkeleton';
 import { colors } from '../../theme/colors';
 import { useGetDashboardQuery } from '../../store/api/baseApi';
 
@@ -13,9 +14,9 @@ export default function HomeScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.safeArea, styles.center]}>
+      <SafeAreaView style={styles.safeArea}>
         <StatusBar barStyle="light-content" backgroundColor={colors.surface} />
-        <ActivityIndicator size="large" color={colors.primary} />
+        <DashboardSkeleton />
       </SafeAreaView>
     );
   }

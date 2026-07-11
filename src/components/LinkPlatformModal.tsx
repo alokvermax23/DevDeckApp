@@ -55,7 +55,7 @@ export default function LinkPlatformModal({
         <View style={styles.backdrop}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <KeyboardAvoidingView 
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
               style={styles.keyboardView}
             >
               <View style={styles.sheetContainer}>

@@ -47,6 +47,8 @@
 		1FDACA8D40BE4D3B814D1286 /* Geist-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44C135C5E693492EAE197558 /* Geist-Light.ttf */; };
 		F07D5D3B718A433BB7453E75 /* Geist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92A90184A07A4939A7772E39 /* Geist-SemiBold.ttf */; };
 		D92AF2AEC6004BF781DCBEAB /* ._Geist-UltraBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318787611C0D419993FFFBF0 /* ._Geist-UltraBlack.ttf */; };
+		2D9F494C779C4B50AC495256 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 581FBAA7EC064F369E667F34 /* BootSplash.storyboard */; };
+		6CE17CFB61074FD99F36F511 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33EBB2B9F3B346F19A80CD15 /* Colors.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +98,8 @@
 		44C135C5E693492EAE197558 /* Geist-Light.ttf */ = {isa = PBXFileReference; name = "Geist-Light.ttf"; path = "../src/assets/Fonts/Geist-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		92A90184A07A4939A7772E39 /* Geist-SemiBold.ttf */ = {isa = PBXFileReference; name = "Geist-SemiBold.ttf"; path = "../src/assets/Fonts/Geist-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		318787611C0D419993FFFBF0 /* ._Geist-UltraBlack.ttf */ = {isa = PBXFileReference; name = "._Geist-UltraBlack.ttf"; path = "../src/assets/Fonts/._Geist-UltraBlack.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		581FBAA7EC064F369E667F34 /* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "DevDeckApp/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		33EBB2B9F3B346F19A80CD15 /* Colors.xcassets */ = {isa = PBXFileReference; name = "Colors.xcassets"; path = "DevDeckApp/Colors.xcassets"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = folder.assetcatalog; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				581FBAA7EC064F369E667F34 /* BootSplash.storyboard */,
+				33EBB2B9F3B346F19A80CD15 /* Colors.xcassets */,
 			);
 			name = DevDeckApp;
 			sourceTree = "<group>";
@@ -312,6 +318,8 @@
 				1FDACA8D40BE4D3B814D1286 /* Geist-Light.ttf in Resources */,
 				F07D5D3B718A433BB7453E75 /* Geist-SemiBold.ttf in Resources */,
 				D92AF2AEC6004BF781DCBEAB /* ._Geist-UltraBlack.ttf in Resources */,
+				2D9F494C779C4B50AC495256 /* BootSplash.storyboard in Resources */,
+				6CE17CFB61074FD99F36F511 /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

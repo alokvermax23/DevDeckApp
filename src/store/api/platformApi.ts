@@ -39,8 +39,19 @@ export const platformApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Platform'],
     }),
+    refreshAll: builder.mutation<void, void>({
+      query: () => ({
+        url: '/api/platforms/refresh-all',
+        method: 'POST',
+      }),
+      invalidatesTags: ['Platform', 'Dashboard'],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useLinkPlatformMutation, useGetLinkedPlatformsQuery } = platformApi;
+export const { 
+  useLinkPlatformMutation, 
+  useGetLinkedPlatformsQuery,
+  useRefreshAllMutation 
+} = platformApi;

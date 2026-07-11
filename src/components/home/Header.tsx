@@ -1,19 +1,26 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Share2 } from 'lucide-react-native';
+import { RefreshCw } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import { useGetDashboardQuery } from '../../store/api/baseApi';
+import { useRefreshAllMutation } from '../../store/api/platformApi';
 
 export default function Header() {
   const date = new Date();
   const day = date.getDate();
   const month = date.toLocaleString('default', { month: 'short' });
 
+  const { data: dashboardResp } = useGetDashboardQuery();
+  const avatarUrl = dashboardResp?.data?.avatarUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCERUHQJr_ZFwfLo08EWPq2vdp1uW6NqG5nzgITGYf0V0cIpnr6FKOhWO0meYcJ36EjrvUvnuNICpyy-dQPs7HmYaf83GPxymKrvLtX0bNo3YuoKOSlDumrTcYwTrS-h4PjeYeItwkC7KXeTLnn2IVt8t7PRplp5AoQd-VLs1xGcLknQ0LplTwbVXiFHytqEWrOzeq1dgBtyRg6jwMxEfnHrm9cSoejb7oZ5oRb3wKKW6AohHqtEe-sfcn-WAPnOzqt2Nmpj2EHL_E';
+
+  const [refreshAll, { isLoading: isRefreshing }] = useRefreshAllMutation();
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
         <View style={styles.avatarContainer}>
           <Image
-            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCERUHQJr_ZFwfLo08EWPq2vdp1uW6NqG5nzgITGYf0V0cIpnr6FKOhWO0meYcJ36EjrvUvnuNICpyy-dQPs7HmYaf83GPxymKrvLtX0bNo3YuoKOSlDumrTcYwTrS-h4PjeYeItwkC7KXeTLnn2IVt8t7PRplp5AoQd-VLs1xGcLknQ0LplTwbVXiFHytqEWrOzeq1dgBtyRg6jwMxEfnHrm9cSoejb7oZ5oRb3wKKW6AohHqtEe-sfcn-WAPnOzqt2Nmpj2EHL_E' }}
+            source={{ uri: avatarUrl }}
             style={styles.avatar}
           />
         </View>
@@ -24,8 +31,12 @@ export default function Header() {
           </Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.shareButton}>
-        <Share2 size={24} color={colors.primary} />
+      <TouchableOpacity 
+        style={[styles.shareButton, { opacity: isRefreshing ? 0.5 : 1 }]}
+        onPress={() => !isRefreshing && refreshAll()}
+        disabled={isRefreshing}
+      >
+        <RefreshCw size={24} color={colors.primary} />
       </TouchableOpacity>
     </View>
   );

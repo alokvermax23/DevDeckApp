@@ -5,7 +5,7 @@ import HomeScreen from '../screens/main/HomeScreen';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { colors } from '../theme/colors';
 import { useAppDispatch } from '../store/hooks';
-import { logout } from '../store/slices/authSlice';
+import { logoutUser } from '../store/slices/authSlice';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +24,7 @@ function SettingsScreen() {
     <View style={{ flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={{ color: colors.onSurface, marginBottom: 20 }}>Settings (Coming Soon)</Text>
       <TouchableOpacity 
-        onPress={() => dispatch(logout())}
+        onPress={() => dispatch(logoutUser())}
         style={{
           paddingHorizontal: 24,
           paddingVertical: 12,

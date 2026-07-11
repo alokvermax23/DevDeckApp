@@ -76,13 +76,23 @@ export default function HeatmapCard({
     });
   }
 
+  const scrollViewRef = React.useRef<ScrollView>(null);
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.title}>Contribution Activity</Text>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+        ref={scrollViewRef}
+        onContentSizeChange={() => {
+          scrollViewRef.current?.scrollToEnd({ animated: false });
+        }}
+      >
         <View style={styles.grid}>
           {monthsData.map((month, mIndex) => (
             <View key={mIndex} style={styles.monthBlock}>

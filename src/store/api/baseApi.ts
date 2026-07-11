@@ -13,6 +13,7 @@ export interface DashboardData {
   platformCount: number;
   heatmap: Record<string, number>;
   platforms: PlatformData[];
+  avatarUrl?: string;
 }
 
 export interface PlatformData {
@@ -34,7 +35,7 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Platform'],
+  tagTypes: ['Platform', 'Dashboard'],
   endpoints: (builder) => ({
     checkHealth: builder.query<{ message: string }, void>({
       query: () => '/',
@@ -51,6 +52,7 @@ export const baseApi = createApi({
     }),
     getDashboard: builder.query<DashboardResponse, void>({
       query: () => '/api/dashboard',
+      providesTags: ['Dashboard'],
     }),
   }),
 });
