@@ -201,8 +201,12 @@ export default function OnboardingScreen({ route, navigation }: any) {
       </View>
 
       <BottomNavBar 
-        onSkip={() => console.log('Skipped onboarding')}
-        onContinue={() => console.log('Continued onboarding')}
+        onSkip={() => {
+          dispatch(setReduxUsername('guest'));
+        }}
+        onContinue={() => {
+          dispatch(setReduxUsername(reduxUsername || 'guest'));
+        }}
       />
 
       {activePlatform && (

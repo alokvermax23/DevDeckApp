@@ -2,6 +2,86 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/Fonts/._Geist-Black.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-Bold.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-Light.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-Medium.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-Regular.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-SemiBold.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-Thin.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-UltraBlack.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._Geist-UltraLight.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/._GeistVF.ttf",
+      "sha1": "68f094e19ca4df6dbffd4d68cac71976cf13c39e"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-Black.ttf",
+      "sha1": "5d0f0de60da93cd4a45a5684a5218d084c46a551"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-Bold.ttf",
+      "sha1": "4396dd6283bae2eb29ecfd5c02a3329e39d93501"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-Light.ttf",
+      "sha1": "053a4e9582295eecde414a3e6edee5dfbc70e6a7"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-Medium.ttf",
+      "sha1": "2c9b424ae4ea80e915054f164178a1b1116f27af"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-Regular.ttf",
+      "sha1": "70329e0ff9248b3f92bf84d7aa8d235f8ea1d5cb"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-SemiBold.ttf",
+      "sha1": "61a480732cd75a7b22e94c13970f9b9ea9e0ec65"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-Thin.ttf",
+      "sha1": "1f1f1ec7643162597730ac51708caf022eb4876a"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-UltraBlack.ttf",
+      "sha1": "be1998ae51bd994e5d1eccd8e431f5802632c513"
+    },
+    {
+      "path": "src/assets/Fonts/Geist-UltraLight.ttf",
+      "sha1": "6ed826be22708f3481661e8a5fc2342bfd68c39a"
+    },
+    {
+      "path": "src/assets/Fonts/GeistVF.ttf",
+      "sha1": "9a531509e4e768e9102d11f5d7d293e3f04d9c64"
+    },
+    {
       "path": "src/assets/Fonts/JetBrainsMono-Bold.ttf",
       "sha1": "a2ca1bc6bb575ac125d9eaf338aa9a5af56bc377"
     },

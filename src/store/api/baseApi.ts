@@ -1,6 +1,27 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // Removed RootState import to prevent circular dependency
 
+export interface DashboardResponse {
+  success: boolean;
+  data: DashboardData;
+}
+
+export interface DashboardData {
+  totalProblemsSolved: number;
+  currentStreak: number;
+  maxStreak: number;
+  platformCount: number;
+  heatmap: Record<string, number>;
+  platforms: PlatformData[];
+}
+
+export interface PlatformData {
+  platform: string;
+  externalUsername: string;
+  problemsSolved: number;
+  heatmapData: Record<string, number>;
+}
+
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: fetchBaseQuery({
@@ -28,6 +49,9 @@ export const baseApi = createApi({
         body,
       }),
     }),
+    getDashboard: builder.query<DashboardResponse, void>({
+      query: () => '/api/dashboard',
+    }),
   }),
 });
 
@@ -35,4 +59,5 @@ export const {
   useCheckHealthQuery,
   useCheckUsernameQuery,
   useUpdateUsernameMutation,
+  useGetDashboardQuery,
 } = baseApi;
