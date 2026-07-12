@@ -5,7 +5,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import AppText from './AppText';
 import AtmosphericBackground from './AtmosphericBackground';
 import { colors } from '../theme/colors';
-import { useCheckUsernameQuery } from '../store/api/baseApi';
+import { useCheckUsernameQuery } from '../store/api/userApi';
 
 type Props = {
   visible: boolean;

@@ -8,7 +8,7 @@ import PlatformCard, { PlatformStatus } from '../../components/PlatformCard';
 import LinkPlatformModal from '../../components/LinkPlatformModal';
 import UsernameConfirmationSheet from '../../components/UsernameConfirmationSheet';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { useUpdateUsernameMutation } from '../../store/api/baseApi';
+import { useUpdateUsernameMutation } from '../../store/api/userApi';
 import { useLinkPlatformMutation, useGetLinkedPlatformsQuery } from '../../store/api/platformApi';
 import { setUsername as setReduxUsername, completeOnboarding } from '../../store/slices/authSlice';
 import { storage } from '../../store/storage';
@@ -189,19 +189,16 @@ export default function OnboardingScreen({ route, navigation }: any) {
                 onConnect={() => setActivePlatform({ id: 'geeksforgeeks', name: 'GeeksforGeeks', brandColor: '#2f8d46', placeholder: 'Enter GeeksforGeeks username' })}
               />
             </View>
-            
-            <View style={styles.terminalTip}>
-              <Svg width="18" height="18" viewBox="0 0 24 24" style={{ marginTop: 2 }}>
-                <Path fill={colors.onSurfaceVariant} d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-              </Svg>
-              <View style={styles.terminalTipContent}>
-                <AppText style={styles.cliCommand}>$ dev init --help</AppText>
-                <AppText style={styles.cliDesc}>
-                  Connecting platforms allows us to sync your streak data and generate your global developer rank.
-                </AppText>
-              </View>
-            </View>
           </ScrollView>
+
+          <View style={styles.terminalTip}>
+            <Svg width="14" height="14" viewBox="0 0 24 24">
+              <Path fill={colors.onSurfaceVariant} d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+            </Svg>
+            <AppText style={styles.cliDesc}>
+              Link platforms to generate your global developer rank.
+            </AppText>
+          </View>
 
         </View>
       </View>
@@ -275,7 +272,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 560,
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 56,
     paddingBottom: 24,
   },
   headerSection: {
@@ -323,7 +320,6 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   platformsSection: {
-    marginBottom: 32,
   },
   terminalTip: {
     flexDirection: 'row',
@@ -331,23 +327,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.outlineVariant,
-    borderRadius: 8,
-    padding: 16,
-    gap: 12,
-  },
-  terminalTipContent: {
-    flex: 1,
-  },
-  cliCommand: {
-    fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 13,
-    color: colors.primary,
-    marginBottom: 4,
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+    alignItems: 'center',
+    marginTop: 12,
   },
   cliDesc: {
     fontFamily: 'JetBrainsMono-Regular',
-    fontSize: 13,
+    fontSize: 11,
     color: colors.onSurfaceVariant,
-    lineHeight: 20,
+    flex: 1,
   },
 });

@@ -1,14 +1,48 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { colors } from '../../theme/colors';
 
+type FilterMode = 'all' | 'commits' | 'problems';
+
+const FILTERS: { key: FilterMode; label: string }[] = [
+  { key: 'all', label: 'All' },
+  { key: 'commits', label: 'Commits' },
+  { key: 'problems', label: 'Problems' },
+];
+
 export default function HeatmapCard({ 
-  heatmapData = {}, 
-  totalContributions = 0 
+  heatmapData = {},
+  githubHeatmap = {},
+  problemsHeatmap = {},
+  totalContributions = 0,
+  githubCommits = 0,
 }: { 
   heatmapData?: Record<string, number>;
+  githubHeatmap?: Record<string, number>;
+  problemsHeatmap?: Record<string, number>;
   totalContributions?: number;
+  githubCommits?: number;
 }) {
+  const [filter, setFilter] = useState<FilterMode>('all');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<View>(null);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+
+  const activeData =
+    filter === 'commits' ? githubHeatmap :
+    filter === 'problems' ? problemsHeatmap :
+    heatmapData;
+
+  const activeTotal =
+    filter === 'commits' ? githubCommits :
+    filter === 'problems' ? totalContributions :
+    totalContributions + githubCommits;
+
+  const activeLabel =
+    filter === 'commits' ? 'GitHub Commits' :
+    filter === 'problems' ? 'Problems Solved' :
+    'Total Contributions';
+
   const intensityColors = [
     '#2a2a2a', // 0
     'rgba(192, 193, 255, 0.2)', // 1
@@ -20,7 +54,6 @@ export default function HeatmapCard({
   const monthsData = [];
   const today = new Date();
   
-  // We want the last 12 months including this one.
   const past12Months = [];
   for (let i = 11; i >= 0; i--) {
     const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
@@ -38,7 +71,6 @@ export default function HeatmapCard({
     const colsData: (string | null)[][] = [];
     let dayCounter = 1;
     
-    // First column
     let firstCol = Array(7).fill(null);
     for (let i = currentDayOfWeek; i < 7 && dayCounter <= m.days; i++) {
       firstCol[i] = `${m.year}-${String(m.month + 1).padStart(2, '0')}-${String(dayCounter).padStart(2, '0')}`;
@@ -46,7 +78,6 @@ export default function HeatmapCard({
     }
     colsData.push(firstCol);
 
-    // Full columns
     while (m.days - dayCounter + 1 >= 7) {
       let col = [];
       for (let i = 0; i < 7; i++) {
@@ -56,7 +87,6 @@ export default function HeatmapCard({
       colsData.push(col);
     }
 
-    // Last column (if any remaining)
     if (dayCounter <= m.days) {
       let lastCol = Array(7).fill(null);
       let remaining = m.days - dayCounter + 1;
@@ -70,10 +100,7 @@ export default function HeatmapCard({
       currentDayOfWeek = 0;
     }
 
-    monthsData.push({
-      name: m.name,
-      columns: colsData
-    });
+    monthsData.push({ name: m.name, columns: colsData });
   }
 
   const scrollViewRef = React.useRef<ScrollView>(null);
@@ -82,7 +109,53 @@ export default function HeatmapCard({
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.title}>Contribution Activity</Text>
+        {/* Dropdown trigger */}
+        <TouchableOpacity
+          ref={dropdownRef}
+          style={styles.dropdownTrigger}
+          activeOpacity={0.7}
+          onPress={() => {
+            dropdownRef.current?.measureInWindow((x, y, width, height) => {
+              setDropdownPos({ top: y + height + 4, right: 0 });
+              setDropdownOpen(true);
+            });
+          }}
+        >
+          <Text style={styles.dropdownTriggerText}>
+            {FILTERS.find(f => f.key === filter)?.label}
+          </Text>
+          <Text style={styles.dropdownChevron}>▾</Text>
+        </TouchableOpacity>
       </View>
+
+      {/* Dropdown Modal */}
+      <Modal
+        visible={dropdownOpen}
+        transparent
+        animationType="none"
+        onRequestClose={() => setDropdownOpen(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setDropdownOpen(false)}
+        >
+          <View style={[styles.dropdownMenu, { top: dropdownPos.top }]}>
+            {FILTERS.map(f => (
+              <TouchableOpacity
+                key={f.key}
+                style={[styles.dropdownItem, filter === f.key && styles.dropdownItemActive]}
+                onPress={() => { setFilter(f.key); setDropdownOpen(false); }}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.dropdownItemText, filter === f.key && styles.dropdownItemTextActive]}>
+                  {f.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       <ScrollView 
         horizontal 
@@ -104,7 +177,7 @@ export default function HeatmapCard({
                         return <View key={rowIndex} style={[styles.cell, { backgroundColor: 'transparent' }]} />;
                       }
                       
-                      const count = heatmapData[dateStr] || 0;
+                      const count = activeData[dateStr] || 0;
                       let intensity = 0;
                       if (count > 8) intensity = 4;
                       else if (count > 4) intensity = 3;
@@ -139,7 +212,7 @@ export default function HeatmapCard({
 
       <View style={styles.footer}>
         <View>
-          <Text style={styles.totalContributions}>{totalContributions.toLocaleString()} Total Contributions</Text>
+          <Text style={styles.totalContributions}>{activeTotal.toLocaleString()} {activeLabel}</Text>
           <Text style={styles.timeframe}>Last 365 days</Text>
         </View>
       </View>
@@ -151,19 +224,75 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#111111',
     borderRadius: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: '#262626',
-    marginTop: 20,
+    marginTop: 16,
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 16,
   },
   title: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Geist-Medium',
     color: colors.onSurface,
+  },
+  dropdownTrigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#333333',
+    backgroundColor: colors.surfaceContainerHigh,
+  },
+  dropdownTriggerText: {
+    fontSize: 11,
+    fontFamily: 'JetBrainsMono-Medium',
+    color: colors.onSurfaceVariant,
+  },
+  dropdownChevron: {
+    fontSize: 10,
+    color: colors.onSurfaceVariant,
+  },
+  modalOverlay: {
+    flex: 1,
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    right: 16,
+    backgroundColor: colors.surfaceContainerHighest,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#333333',
+    overflow: 'hidden',
+    minWidth: 110,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  dropdownItem: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  dropdownItemActive: {
+    backgroundColor: 'rgba(192, 193, 255, 0.1)',
+  },
+  dropdownItemText: {
+    fontSize: 12,
+    fontFamily: 'JetBrainsMono-Medium',
+    color: colors.onSurfaceVariant,
+  },
+  dropdownItemTextActive: {
+    color: colors.primary,
   },
   legendContainer: {
     flexDirection: 'row',
@@ -181,8 +310,8 @@ const styles = StyleSheet.create({
     color: colors.onSurfaceVariant,
   },
   legendDot: {
-    width: 12,
-    height: 12,
+    width: 10,
+    height: 10,
     borderRadius: 2,
     borderWidth: 1,
     borderColor: colors.outlineVariant,
@@ -192,29 +321,29 @@ const styles = StyleSheet.create({
   },
   grid: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 12,
   },
   monthBlock: {
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 6,
+    gap: 4,
   },
   monthColumns: {
     flexDirection: 'row',
-    gap: 4,
+    gap: 3,
   },
   monthLabel: {
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: 'Geist-Medium',
     color: colors.onSurfaceVariant,
   },
   column: {
     flexDirection: 'column',
-    gap: 4,
+    gap: 3,
   },
   cell: {
-    width: 12,
-    height: 12,
+    width: 10,
+    height: 10,
     borderRadius: 2,
   },
   footer: {
@@ -227,13 +356,13 @@ const styles = StyleSheet.create({
     borderTopColor: '#262626',
   },
   totalContributions: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'JetBrainsMono-Medium',
     color: colors.primary,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   timeframe: {
-    fontSize: 14,
+    fontSize: 11,
     fontFamily: 'JetBrainsMono-Regular',
     color: colors.onSurfaceVariant,
   },

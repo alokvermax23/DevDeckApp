@@ -46,6 +46,13 @@ export const platformApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Platform', 'Dashboard'],
     }),
+    unlinkPlatform: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/api/platforms/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Platform', 'Dashboard'],
+    }),
   }),
   overrideExisting: false,
 });
@@ -53,5 +60,6 @@ export const platformApi = baseApi.injectEndpoints({
 export const { 
   useLinkPlatformMutation, 
   useGetLinkedPlatformsQuery,
-  useRefreshAllMutation 
+  useRefreshAllMutation,
+  useUnlinkPlatformMutation
 } = platformApi;

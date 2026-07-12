@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ProblemsSolvedIcon, PlatformIcon, GlobalRankIcon, MaxStreakIcon } from './StatIcons';
+import { ProblemsSolvedIcon, PlatformIcon, MaxStreakIcon, GitCommitIcon } from './StatIcons';
 import { colors } from '../../theme/colors';
 
 const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | number; label: string }) => (
   <View style={styles.card}>
-    <Icon size={24} color={colors.primary} style={styles.icon} />
+    <Icon size={20} color={colors.primary} style={styles.icon} />
     <View>
       <Text style={styles.value}>{value}</Text>
       <Text style={styles.label}>{label}</Text>
@@ -14,19 +14,21 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any; value: string | num
 );
 
 export default function StatsGrid({ 
-  problemsSolved = 0, 
+  problemsSolved = 0,
+  githubCommits = 0,
   platforms = 0, 
   maxStreak = 0 
 }: { 
-  problemsSolved?: number, 
+  problemsSolved?: number,
+  githubCommits?: number,
   platforms?: number, 
   maxStreak?: number 
 }) {
   return (
     <View style={styles.container}>
       <StatCard icon={ProblemsSolvedIcon} value={problemsSolved} label="PROBLEMS SOLVED" />
+      <StatCard icon={GitCommitIcon} value={githubCommits} label="GH COMMITS" />
       <StatCard icon={PlatformIcon} value={platforms} label="PLATFORMS" />
-      <StatCard icon={GlobalRankIcon} value="#1,240" label="GLOBAL RANK" />
       <StatCard icon={MaxStreakIcon} value={maxStreak} label="MAX STREAK" />
     </View>
   );
@@ -37,30 +39,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 16,
-    marginTop: 24,
+    gap: 12,
+    marginTop: 16,
   },
   card: {
     backgroundColor: '#111111',
     borderRadius: 12,
-    padding: 24,
-    width: '47%',
+    padding: 16,
+    width: '48%',
     borderWidth: 1,
     borderColor: '#262626',
     justifyContent: 'space-between',
-    minHeight: 140, // Ensures there's plenty of space inside
+    minHeight: 110, // Ensures there's plenty of space inside
   },
   icon: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   value: {
-    fontSize: 32,
+    fontSize: 24,
     fontFamily: 'Geist-Bold',
     color: colors.onSurface,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   label: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'JetBrainsMono-Regular',
     color: colors.onSurfaceVariant,
     textTransform: 'uppercase',

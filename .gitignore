@@ -73,3 +73,9 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Large binary assets (use Git LFS or CDN instead)
+assets/*.mp4
+assets/*.mov
+assets/*.avi
+assets/*.mkv

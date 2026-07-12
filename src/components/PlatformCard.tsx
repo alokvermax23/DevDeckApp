@@ -14,6 +14,7 @@ type Props = {
   iconPath: string;
   status?: PlatformStatus;
   onConnect?: () => void;
+  onUnlink?: () => void;
 };
 
 export default function PlatformCard({
@@ -23,12 +24,21 @@ export default function PlatformCard({
   iconPath,
   status = 'unconnected',
   onConnect,
+  onUnlink,
 }: Props) {
 
   const renderAction = () => {
     switch (status) {
       case 'connected':
-        return (
+        return onUnlink ? (
+          <TouchableOpacity 
+            style={[styles.connectButton, { borderColor: 'rgba(239, 68, 68, 0.4)' }]} 
+            activeOpacity={0.7}
+            onPress={onUnlink}
+          >
+            <AppText style={[styles.connectButtonText, { color: '#ef4444' }]}>UNLINK</AppText>
+          </TouchableOpacity>
+        ) : (
           <View style={styles.connectedBadge}>
             <AppText style={styles.connectedText}>CONNECTED</AppText>
             <Svg width="18" height="18" viewBox="0 0 24 24">
@@ -61,7 +71,7 @@ export default function PlatformCard({
   return (
     <View style={[
       styles.card,
-      status === 'connected' && styles.cardDisabled
+      status === 'connected' && !onUnlink && styles.cardDisabled
     ]}>
       <View style={styles.leftSection}>
         <PlatformLogo name={name} size={28} />
@@ -81,15 +91,15 @@ export default function PlatformCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surfaceContainer,
-    borderRadius: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
     borderColor: '#262626',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   cardDisabled: {
     opacity: 0.6,
@@ -104,12 +114,12 @@ const styles = StyleSheet.create({
 
   name: {
     fontFamily: 'JetBrainsMono-Bold',
-    fontSize: 16,
+    fontSize: 15,
     color: colors.onSurface,
   },
   description: {
     fontFamily: 'JetBrainsMono-Regular',
-    fontSize: 11,
+    fontSize: 10,
     color: colors.onSurfaceVariant,
     marginTop: 2,
   },
@@ -130,15 +140,15 @@ const styles = StyleSheet.create({
   },
   connectButton: {
     borderWidth: 1,
-    borderColor: 'rgba(192, 193, 255, 0.4)', // primary with opacity
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
+    borderColor: 'rgba(192, 193, 255, 0.4)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
     justifyContent: 'center',
   },
   connectButtonText: {
     fontFamily: 'JetBrainsMono-Medium',
-    fontSize: 11,
+    fontSize: 10,
     color: colors.primary,
     letterSpacing: 1,
   },

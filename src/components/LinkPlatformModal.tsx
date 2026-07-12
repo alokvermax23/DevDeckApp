@@ -8,7 +8,8 @@ import {
   KeyboardAvoidingView, 
   Platform, 
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  ActivityIndicator
 } from 'react-native';
 import AppText from './AppText';
 import PlatformLogo from './PlatformLogo';
@@ -55,7 +56,7 @@ export default function LinkPlatformModal({
         <View style={styles.backdrop}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <KeyboardAvoidingView 
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
               style={styles.keyboardView}
             >
               <View style={styles.sheetContainer}>
@@ -100,9 +101,11 @@ export default function LinkPlatformModal({
                     onPress={handleConnect}
                     disabled={isLoading}
                   >
-                    <AppText style={styles.connectButtonText}>
-                      {isLoading ? 'Connecting...' : 'Verify & Connect'}
-                    </AppText>
+                    {isLoading ? (
+                      <ActivityIndicator color="#000000" size="small" />
+                    ) : (
+                      <AppText style={styles.connectButtonText}>Verify & Connect</AppText>
+                    )}
                   </TouchableOpacity>
                 </View>
                 

@@ -14,6 +14,8 @@ import { store } from './src/store';
 import { setCredentials } from './src/store/slices/authSlice';
 import { storage } from './src/store/storage';
 import RootNavigator from './src/navigation/RootNavigator';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './src/components/ToastConfig';
 
 function AppContent() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -60,9 +62,10 @@ function AppContent() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <SafeAreaProvider style={{ backgroundColor: colors.background }}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
       <RootNavigator />
+      <Toast config={toastConfig} />
     </SafeAreaProvider>
   );
 }

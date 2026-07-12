@@ -7,23 +7,21 @@ import HeatmapCard from '../../components/home/HeatmapCard';
 import StatsGrid from '../../components/home/StatsGrid';
 import DashboardSkeleton from '../../components/home/DashboardSkeleton';
 import { colors } from '../../theme/colors';
-import { useGetDashboardQuery } from '../../store/api/baseApi';
+import { useGetDashboardQuery } from '../../store/api/dashboardApi';
 
 export default function HomeScreen() {
   const { data: dashboardResp, isLoading, isError } = useGetDashboardQuery();
-
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <StatusBar barStyle="light-content" backgroundColor={colors.surface} />
         <DashboardSkeleton />
       </SafeAreaView>
     );
   }
-
   if (isError || !dashboardResp?.data) {
     return (
-      <SafeAreaView style={[styles.safeArea, styles.center]}>
+      <SafeAreaView style={[styles.safeArea, styles.center]} edges={['top', 'left', 'right']}>
         <StatusBar barStyle="light-content" backgroundColor={colors.surface} />
         <Text style={{ color: 'white' }}>Failed to load dashboard data</Text>
       </SafeAreaView>
@@ -32,14 +30,21 @@ export default function HomeScreen() {
 
   const dashboard = dashboardResp.data;
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor={colors.surface} />
       <Header />
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <StreakCard streak={dashboard.currentStreak} />
-        <HeatmapCard heatmapData={dashboard.heatmap} totalContributions={dashboard.totalProblemsSolved} />
+        <HeatmapCard 
+          heatmapData={dashboard.heatmap} 
+          githubHeatmap={dashboard.githubHeatmap}
+          problemsHeatmap={dashboard.problemsHeatmap}
+          totalContributions={dashboard.totalProblemsSolved}
+          githubCommits={dashboard.githubCommits}
+        />
         <StatsGrid 
           problemsSolved={dashboard.totalProblemsSolved} 
+          githubCommits={dashboard.githubCommits}
           platforms={dashboard.platformCount} 
           maxStreak={dashboard.maxStreak} 
         />

@@ -7,7 +7,7 @@ export default function StreakCard({ streak = 0 }: { streak?: number }) {
   return (
     <View style={styles.card}>
       <View style={styles.iconContainer}>
-        <StreakIcon size={64} color={colors.primary} />
+        <StreakIcon size={48} color={colors.primary} />
       </View>
       <Text style={styles.streakNumber}>{streak}</Text>
       <Text style={styles.streakLabel}>Day Streak</Text>
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#111111',
     borderRadius: 12,
-    paddingVertical: 20,
-    paddingHorizontal: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -40,17 +40,17 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'relative',
-    marginBottom: 7, // Pull number closer to logo
+    marginBottom: 4, // Pull number closer to logo
   },
   streakNumber: {
-    fontSize: 48,
+    fontSize: 36,
     fontFamily: 'JetBrainsMono-Bold',
     color: colors.primary,
     includeFontPadding: false,
-    marginBottom: -4, // Pull text tighter
+    marginBottom: -2, // Pull text tighter
   },
   streakLabel: {
-    fontSize: 14,
+    fontSize: 11,
     fontFamily: 'Geist-Bold',
     letterSpacing: 1.5,
     textTransform: 'uppercase',
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
   dotsContainer: {
     flexDirection: 'row',
     gap: 4,
-    marginTop: 8,
+    marginTop: 6,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   dotActive: {
     backgroundColor: colors.primary,
