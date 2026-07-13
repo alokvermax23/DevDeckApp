@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { useAppDispatch } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
 import { useGetUserProfileQuery } from '../../store/api/userApi';
-import { useGetLinkedPlatformsQuery, useUnlinkPlatformMutation } from '../../store/api/platformApi';
+import { useGetLinkedPlatformsQuery, useUnlinkPlatformMutation, useLinkPlatformMutation } from '../../store/api/platformApi';
 import PlatformCard, { PlatformStatus } from '../../components/PlatformCard';
 import AppText from '../../components/AppText';
 import LinkPlatformModal from '../../components/LinkPlatformModal';
+import Skeleton from '../../components/Skeleton';
 import { LogOut } from 'lucide-react-native';
 
 const PLATFORMS_INFO = [
@@ -54,6 +55,8 @@ export default function SettingsScreen() {
   const { data: profileResp, isLoading: isProfileLoading } = useGetUserProfileQuery();
   const { data: platformsResp, isLoading: isPlatformsLoading } = useGetLinkedPlatformsQuery();
   const [unlinkPlatform, { isLoading: isUnlinking }] = useUnlinkPlatformMutation();
+  const [linkPlatform, { isLoading: isLinking }] = useLinkPlatformMutation();
+  const [modalError, setModalError] = useState<string | null>(null);
 
   const [activePlatform, setActivePlatform] = useState<{id: string; name: string; brandColor: string; placeholder: string} | null>(null);
 
@@ -87,21 +90,35 @@ export default function SettingsScreen() {
         <AppText style={styles.headerTitle}>Settings</AppText>
       </View>
 
-      <View style={styles.content}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Section */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatarContainer}>
-            {profile?.avatarUrl ? (
-              <Image source={{ uri: profile.avatarUrl }} style={styles.avatar} />
-            ) : (
-              <View style={[styles.avatar, { backgroundColor: colors.surfaceContainerHighest }]} />
-            )}
+        {isProfileLoading ? (
+          <View style={styles.profileSection}>
+            <Skeleton width={48} height={48} borderRadius={24} style={{ marginRight: 12 }} />
+            <View style={styles.profileInfo}>
+              <Skeleton width={120} height={20} borderRadius={4} />
+              <Skeleton width={80} height={14} borderRadius={4} style={{ marginTop: 4 }} />
+            </View>
           </View>
-          <View style={styles.profileInfo}>
-            <AppText style={styles.name}>{profile?.name || 'User'}</AppText>
-            <AppText style={styles.username}>@{profile?.username || 'username'}</AppText>
+        ) : (
+          <View style={styles.profileSection}>
+            <View style={styles.avatarContainer}>
+              {profile?.avatarUrl ? (
+                <Image source={{ uri: profile.avatarUrl }} style={styles.avatar} />
+              ) : (
+                <View style={[styles.avatar, { backgroundColor: colors.surfaceContainerHighest }]} />
+              )}
+            </View>
+            <View style={styles.profileInfo}>
+              <AppText style={styles.name}>{profile?.name || 'User'}</AppText>
+              <AppText style={styles.username}>@{profile?.username || 'username'}</AppText>
+            </View>
           </View>
-        </View>
+        )}
 
         <View style={styles.divider} />
 
@@ -111,30 +128,41 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.platformsContainer}>
-          {PLATFORMS_INFO.map((platform) => {
-            const link = platformLinks.find((p: any) => p.platform === platform.id);
-            const status: PlatformStatus = link 
-                ? (link.isValid ? 'connected' : 'unconnected') 
-                : 'unconnected';
-
-            return (
-              <PlatformCard
-                key={platform.id}
-                name={platform.name}
-                description={link && link.isValid ? `Connected as @${link.externalUsername}` : platform.description}
-                brandColor={platform.brandColor}
-                iconPath={platform.iconPath}
-                status={status}
-                onConnect={() => setActivePlatform({ 
-                  id: platform.id.toLowerCase(), 
-                  name: platform.name, 
-                  brandColor: platform.brandColor, 
-                  placeholder: `Enter ${platform.name} username` 
-                })}
-                onUnlink={link ? () => handleUnlink(link.id, platform.name) : undefined}
+          {isPlatformsLoading ? (
+            PLATFORMS_INFO.map((platform) => (
+              <Skeleton 
+                key={platform.id} 
+                height={72} 
+                borderRadius={12} 
+                style={{ marginBottom: 10 }} 
               />
-            );
-          })}
+            ))
+          ) : (
+            PLATFORMS_INFO.map((platform) => {
+              const link = platformLinks.find((p: any) => p.platform === platform.id);
+              const status: PlatformStatus = link 
+                  ? (link.isValid ? 'connected' : 'unconnected') 
+                  : 'unconnected';
+
+              return (
+                <PlatformCard
+                  key={platform.id}
+                  name={platform.name}
+                  description={link && link.isValid ? `Connected as @${link.externalUsername}` : platform.description}
+                  brandColor={platform.brandColor}
+                  iconPath={platform.iconPath}
+                  status={status}
+                  onConnect={() => setActivePlatform({ 
+                    id: platform.id.toLowerCase(), 
+                    name: platform.name, 
+                    brandColor: platform.brandColor, 
+                    placeholder: `Enter ${platform.name} username` 
+                  })}
+                  onUnlink={link ? () => handleUnlink(link.id, platform.name) : undefined}
+                />
+              );
+            })
+          )}
         </View>
 
         {/* Logout Button */}
@@ -146,17 +174,38 @@ export default function SettingsScreen() {
           <LogOut size={18} color="#ff4444" style={{ marginRight: 8 }} />
           <AppText style={styles.logoutText}>Logout</AppText>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
 
       {/* Link Platform Modal */}
       <LinkPlatformModal
         visible={activePlatform !== null}
-        onClose={() => setActivePlatform(null)}
+        onClose={() => {
+          setActivePlatform(null);
+          setModalError(null);
+        }}
         platformName={activePlatform?.name || ''}
-        platformId={activePlatform?.id || ''}
         brandColor={activePlatform?.brandColor || colors.primary}
         placeholder={activePlatform?.placeholder || ''}
-        isRelink={false}
+        isLoading={isLinking}
+        error={modalError}
+        onConnect={async (username) => {
+          if (!activePlatform) return;
+          try {
+            setModalError(null);
+            await linkPlatform({ 
+              platform: activePlatform.id.toUpperCase(), 
+              username 
+            }).unwrap();
+            setActivePlatform(null);
+          } catch (error: any) {
+            console.error('Failed to link platform:', error);
+            if (error?.status === 409) {
+              setModalError(error?.data?.error || 'This platform is already linked.');
+            } else {
+              setModalError(error?.data?.error || 'Failed to link platform. Please try again.');
+            }
+          }
+        }}
       />
     </SafeAreaView>
   );
@@ -181,8 +230,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  contentContainer: {
     padding: 16,
-    justifyContent: 'space-between',
+    paddingBottom: 40,
   },
   profileSection: {
     flexDirection: 'row',
@@ -229,8 +280,7 @@ const styles = StyleSheet.create({
     color: colors.onSurface,
   },
   platformsContainer: {
-    flex: 1,
-    justifyContent: 'space-evenly',
+    marginBottom: 24,
   },
   logoutButton: {
     flexDirection: 'row',

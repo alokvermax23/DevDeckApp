@@ -1,4 +1,11 @@
-import { baseApi, PlatformData } from './baseApi';
+import { baseApi } from './baseApi';
+
+export interface PlatformData {
+  platform: string;
+  externalUsername: string;
+  problemsSolved: number;
+  heatmapData: Record<string, number>;
+}
 
 export interface DashboardResponse {
   success: boolean;
